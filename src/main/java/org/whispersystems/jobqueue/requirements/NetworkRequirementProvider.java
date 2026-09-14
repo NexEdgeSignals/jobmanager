@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.os.Build;
 
 public class NetworkRequirementProvider implements RequirementProvider {
 
@@ -31,18 +32,33 @@ public class NetworkRequirementProvider implements RequirementProvider {
   public NetworkRequirementProvider(Context context) {
     this.requirement = new NetworkRequirement(context);
 
-    context.getApplicationContext().registerReceiver(new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-        if (listener == null) {
-          return;
-        }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      context.getApplicationContext().registerReceiver(new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+          if (listener == null) {
+            return;
+          }
 
-        if (requirement.isPresent()) {
-          listener.onRequirementStatusChanged();
+          if (requirement.isPresent()) {
+            listener.onRequirementStatusChanged();
+          }
         }
-      }
-    }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+      }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), Context.RECEIVER_NOT_EXPORTED);
+    } else {
+      context.getApplicationContext().registerReceiver(new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+          if (listener == null) {
+            return;
+          }
+
+          if (requirement.isPresent()) {
+            listener.onRequirementStatusChanged();
+          }
+        }
+      }, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
   }
 
   @Override

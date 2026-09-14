@@ -1,36 +1,28 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://repo1.maven.org/maven2"
-        }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
-    }
-}
-
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+//apply plugin: 'maven'
 apply plugin: 'signing'
 
 version = "1.0.2"
 group   = "org.whispersystems"
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '21.1.2'
+    namespace 'org.whispersystems.jobqueue'
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 19
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 }
 
 signing {
@@ -38,50 +30,50 @@ signing {
     sign configurations.archives
 }
 
-uploadArchives {
-    configuration = configurations.archives
-    repositories.mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-        repository(url: sonatypeRepo) {
-            authentication(userName: whisperSonatypeUsername, password: whisperSonatypePassword)
-        }
-
-        pom.project {
-            name 'jobmanager'
-            packaging 'aar'
-            description 'Job Manager for Android'
-            url 'https://github.com/WhisperSystems/jobmanager'
-
-            scm {
-                url 'scm:git@github.com:WhisperSystems/jobmanager.git'
-                connection 'scm:git@github.com:WhisperSystems/jobmanager.git'
-                developerConnection 'scm:git@github.com:WhisperSystems/jobmanager.git'
-            }
-
-            licenses {
-                license {
-                    name 'GPLv3'
-                    url 'https://www.gnu.org/licenses/gpl-3.0.txt'
-                    distribution 'repo'
-                }
-            }
-
-            developers {
-                developer {
-                    name 'Moxie Marlinspike'
-                }
-            }
-        }
-    }
-}
-
-task installArchives(type: Upload) {
-    description "Installs the artifacts to the local Maven repository."
-    configuration = configurations['archives']
-    repositories {
-        mavenDeployer {
-            repository url: "file://${System.properties['user.home']}/.m2/repository"
-        }
-    }
-}
+//uploadArchives {
+//    configuration = configurations.archives
+//    repositories.mavenDeployer {
+//        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//
+//        repository(url: sonatypeRepo) {
+//            authentication(userName: whisperSonatypeUsername, password: whisperSonatypePassword)
+//        }
+//
+//        pom.project {
+//            name 'jobmanager'
+//            packaging 'aar'
+//            description 'Job Manager for Android'
+//            url 'https://github.com/WhisperSystems/jobmanager'
+//
+//            scm {
+//                url 'scm:git@github.com:WhisperSystems/jobmanager.git'
+//                connection 'scm:git@github.com:WhisperSystems/jobmanager.git'
+//                developerConnection 'scm:git@github.com:WhisperSystems/jobmanager.git'
+//            }
+//
+//            licenses {
+//                license {
+//                    name 'GPLv3'
+//                    url 'https://www.gnu.org/licenses/gpl-3.0.txt'
+//                    distribution 'repo'
+//                }
+//            }
+//
+//            developers {
+//                developer {
+//                    name 'Moxie Marlinspike'
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//task installArchives(type: Upload) {
+//    description "Installs the artifacts to the local Maven repository."
+//    configuration = configurations['archives']
+//    repositories {
+//        mavenDeployer {
+//            repository url: "file://${System.properties['user.home']}/.m2/repository"
+//        }
+//    }
+//}
